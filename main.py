@@ -10,6 +10,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.agents import AgentExecutor, OpenAIFunctionsAgent
 from tools.sql import run_sqlite_query_tool, list_tables, describe_table_tool
 from tools.report import write_report_tool
+from handler.chat_model_start_handler import ChatModelStartHandler
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
@@ -21,7 +22,10 @@ tools = [
     write_report_tool
     ]
 
-chat = ChatOpenAI()
+handler = ChatModelStartHandler()
+chat = ChatOpenAI(
+    callbacks=[handler],
+)
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
 tables = list_tables()
